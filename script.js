@@ -53,6 +53,7 @@ const operatorPressed = e => {
         savedValue = operate(savedValue, currentValue, savedOperator);
         //Check saved value for overflow here
         //checkForOverflow(savedValue);
+        //round if overflow
         //
         display.textContent = savedValue;
     }
@@ -72,8 +73,9 @@ const equalsPressed = e => {
 const backPressed = e => {
     if (display.textContent.length === 1) {
         display.textContent = '0';
+        enteringNumber = false;
     } else {
-        display.textContent = curVal.slice(0,-1)
+        display.textContent = display.textContent.slice(0,-1)
     }
 };
 
