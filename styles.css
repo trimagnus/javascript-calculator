@@ -4,7 +4,7 @@
 }
 
 .grid-container {
-    background-color: darkslategrey;
+    background-color: rgb(6, 224, 224);
     border-radius: 20px;
     padding: 20px;
     margin: 10px auto;
@@ -31,6 +31,7 @@
     font-weight: bold;
     font-family: 'Roboto', sans-serif;
     color: rgb(39, 38, 38);
+    border-width: 1px;
 }
 
 .grid-dis {
@@ -49,6 +50,8 @@
 
 .grid-clr {
     grid-area: grid-clr;
+    background-color: firebrick;
+    color: white;
 }
 
 .grid-bck {
@@ -101,10 +104,14 @@
 .grid-eql {
     grid-area: grid-eql;
     color: white;
-    background-color: rgb(67, 151, 151);
+    background-color: rgb(8, 116, 116);
     border: outset;
     border-color: rgb(42, 65, 65);
     border-width: 1px;
+}
+.operator-button {
+    background-color: rgb(155, 155, 155);
+    color: white;
 }
 .grid-dec {
     grid-area: grid-dec;

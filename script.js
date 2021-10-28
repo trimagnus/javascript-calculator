@@ -28,7 +28,12 @@ const operate = (a, b, operator) => {
 const add = (a,b) => a+b;
 const sub = (a,b) => a-b;
 const mul = (a,b) => a*b;
-const div = (a,b) => a/b;
+const div = (a,b) => {
+    if (b === 0) {
+        return "Div by zero!";
+    }
+    return a/b;
+}
 
 const isOverflowing = (intVal, max) => {
     if(intVal.toString().length > max) return true;
@@ -61,13 +66,9 @@ const operatorPressed = e => {
     } else if (savedOperator !== null) {
         let currentValue = Number(display.textContent);
         savedValue = operate(savedValue, currentValue, savedOperator);
-
-        console.log("Saved value: " + savedValue);
         while (isOverflowing(savedValue, MAX_INT_LENGTH)) {
             savedValue = roundByOne(savedValue);
         }
-        console.log("Saved value: " + savedValue);
-        
         display.textContent = savedValue;
     }
     savedOperator = e.target.dataset.operator;
