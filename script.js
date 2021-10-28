@@ -30,11 +30,21 @@ const sub = (a,b) => a-b;
 const mul = (a,b) => a*b;
 const div = (a,b) => a/b;
 
+const isOverflowing = (intVal, max) => {
+    if(intVal.toString().length > max) return true;
+    return false;
+}
+
+const roundByOne = (intVal) => {
+    let strVal = intVal.toString();
+    return Number(strVal.slice(0,-1));
+}
 
 // EVENTS //
 const numberPressed = e => {
+    //TODO Add support for decmial
     let displayVal  = display.textContent;
-    if(displayVal.length >= MAX_INT_LENGTH) return;
+    if(enteringNumber && displayVal.length >= MAX_INT_LENGTH) return;
 
     if(!enteringNumber) {
         if(!savedOperator) savedValue = null;
@@ -51,10 +61,13 @@ const operatorPressed = e => {
     } else if (savedOperator !== null) {
         let currentValue = Number(display.textContent);
         savedValue = operate(savedValue, currentValue, savedOperator);
-        //Check saved value for overflow here
-        //checkForOverflow(savedValue);
-        //round if overflow
-        //
+
+        console.log("Saved value: " + savedValue);
+        while (isOverflowing(savedValue, MAX_INT_LENGTH)) {
+            savedValue = roundByOne(savedValue);
+        }
+        console.log("Saved value: " + savedValue);
+        
         display.textContent = savedValue;
     }
     savedOperator = e.target.dataset.operator;
@@ -65,6 +78,9 @@ const equalsPressed = e => {
     if (!savedOperator) return;
     let currentValue = Number(display.textContent);
     savedValue = operate(savedValue, currentValue, savedOperator);
+    while (isOverflowing(savedValue, MAX_INT_LENGTH)) {
+        savedValue = roundByOne(savedValue);
+    }
     display.textContent = savedValue;
     savedOperator = null;
     enteringNumber = false;
