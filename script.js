@@ -1,4 +1,4 @@
-const MAX_INT_LENGTH = 50;
+const MAX_INT_LENGTH = 9;
 
 let savedValue = null;
 let savedOperator = null;
@@ -71,6 +71,7 @@ const equalsPressed = e => {
 };
 
 const backPressed = e => {
+    if (!enteringNumber) return;
     if (display.textContent.length === 1) {
         display.textContent = '0';
         enteringNumber = false;

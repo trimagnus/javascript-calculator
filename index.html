@@ -5,29 +5,34 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Javascript Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Space+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <div id="display">0</div>
-        <button class="button" id="clear-button">AC</button>
-        <button class="button" id="back-button">&#8592;</button>
-        <button class="button number-button" data-value="1">1</button>
-        <button class="button number-button" data-value="2">2</button>
-        <button class="button number-button" data-value="3">3</button>
-        <button class="button number-button" data-value="4">4</button>
-        <button class="button number-button" data-value="5">5</button>
-        <button class="button number-button" data-value="6">6</button>
-        <button class="button number-button" data-value="7">7</button>
-        <button class="button number-button" data-value="8">8</button>
-        <button class="button number-button" data-value="9">9</button>
-        <button class="button number-button" data-value="0">0</button>
-        <button class="button number-button" data-value=".">.</button>
-        <button class="button" id="equal-button">=</button>
-        <button class="button operator-button" data-operator="+">+</button>
-        <button class="button operator-button" data-operator="-">-</button>
-        <button class="button operator-button" data-operator="*">x</button>
-        <button class="button operator-button" data-operator="/">&divide;</button>
+    <div class="grid-container">
+        <div class="grid-dis">
+            <div id="display">0</div>
+        </div>
+        <button class="button grid-clr" id="clear-button">AC</button>
+        <button class="button grid-bck" id="back-button">&larr;</button>
+        <button class="button number-button grid-1" data-value="1">1</button>
+        <button class="button number-button grid-2" data-value="2">2</button>
+        <button class="button number-button grid-3" data-value="3">3</button>
+        <button class="button number-button grid-4" data-value="4">4</button>
+        <button class="button number-button grid-5" data-value="5">5</button>
+        <button class="button number-button grid-6" data-value="6">6</button>
+        <button class="button number-button grid-7" data-value="7">7</button>
+        <button class="button number-button grid-8" data-value="8">8</button>
+        <button class="button number-button grid-9" data-value="9">9</button>
+        <button class="button number-button grid-0" data-value="0">0</button>
+        <button class="button number-button grid-dec" data-value=".">.</button>
+        <button class="button grid-eql" id="equal-button">=</button>
+        <button class="button operator-button grid-add" data-operator="+">+</button>
+        <button class="button operator-button grid-sub" data-operator="-">-</button>
+        <button class="button operator-button grid-mul" data-operator="*">x</button>
+        <button class="button operator-button grid-div" data-operator="/">&divide;</button>
     </div>
 
     <script src="script.js"></script>
