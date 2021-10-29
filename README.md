@@ -8,3 +8,4 @@ Basic calculator app. List of basic features and things being worked on:
 - ~~Support for decimals~~
 - Support for negative numbers
 - Appropirate rounding for large numbers
+- Keyboard entry support
