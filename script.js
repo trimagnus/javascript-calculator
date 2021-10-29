@@ -1,4 +1,4 @@
-const MAX_INT_LENGTH = 9;
+const MAX_INT_LENGTH = 12;
 
 let savedValue = null;
 let savedOperator = null;
@@ -61,6 +61,7 @@ const numberPressed = e => {
 };
 
 const operatorPressed = e => {
+    if(!enteringNumber) return;
     if (savedValue === null) {
         savedValue = Number(display.textContent);
     } else if (savedOperator !== null) {
@@ -76,7 +77,7 @@ const operatorPressed = e => {
 }
 
 const equalsPressed = e => {
-    if (!savedOperator) return;
+    if (!savedOperator && !enteringNumber) return;
     let currentValue = Number(display.textContent);
     savedValue = operate(savedValue, currentValue, savedOperator);
     while (isOverflowing(savedValue, MAX_INT_LENGTH)) {
