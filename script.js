@@ -2,6 +2,7 @@ const MAX_INT_LENGTH = 12;
 
 let savedValue = null;
 let savedOperator = null;
+let isDecimal = false;
 let enteringNumber = false;
 
 const display = document.getElementById('display');
@@ -40,6 +41,7 @@ const isOverflowing = (intVal, max) => {
     return false;
 }
 
+//CRUDE, TERRIBLE FUNCTION. MAKE ME BETTER!
 const roundByOne = (intVal) => {
     let strVal = intVal.toString();
     return Number(strVal.slice(0,-1));
@@ -49,6 +51,7 @@ const roundByOne = (intVal) => {
 const numberPressed = e => {
     //TODO Add support for decmial
     let displayVal  = display.textContent;
+    let bVal = e.target.dataset.value;
     if(enteringNumber && displayVal.length >= MAX_INT_LENGTH) return;
 
     if(!enteringNumber) {
@@ -56,7 +59,11 @@ const numberPressed = e => {
         displayVal = '';
         enteringNumber = true;
     }
-    displayVal += e.target.dataset.value;
+    if (bVal === '.') {
+        if (isDecimal) return;
+        isDecimal = true;
+    }
+    displayVal += bVal;
     display.textContent = displayVal;
 };
 
@@ -64,6 +71,7 @@ const operatorPressed = e => {
     if(!enteringNumber) return;
     if (savedValue === null) {
         savedValue = Number(display.textContent);
+        isDecimal = false;
     } else if (savedOperator !== null) {
         let currentValue = Number(display.textContent);
         savedValue = operate(savedValue, currentValue, savedOperator);
@@ -86,6 +94,7 @@ const equalsPressed = e => {
     display.textContent = savedValue;
     savedOperator = null;
     enteringNumber = false;
+    isDecimal = false;
 };
 
 const backPressed = e => {
@@ -103,6 +112,7 @@ const clear = e => {
     savedValue = null;
     savedOperator = null;
     enteringNumber = false;
+    isDecimal = false;
 };
 
 // EVENT HOOKS //
