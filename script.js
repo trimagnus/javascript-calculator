@@ -46,6 +46,11 @@ const roundByOne = (intVal) => {
     let strVal = intVal.toString();
     return Number(strVal.slice(0,-1));
 }
+///////////////////////////////////////////
+
+const renderDisplay = (text) => {
+    display.textContent = text;
+};
 
 // EVENTS //
 const numberPressed = e => {
@@ -64,7 +69,7 @@ const numberPressed = e => {
         isDecimal = true;
     }
     displayVal += bVal;
-    display.textContent = displayVal;
+    renderDisplay(displayVal);
 };
 
 const operatorPressed = e => {
@@ -78,7 +83,7 @@ const operatorPressed = e => {
         while (isOverflowing(savedValue, MAX_INT_LENGTH)) {
             savedValue = roundByOne(savedValue);
         }
-        display.textContent = savedValue;
+        renderDisplay(savedValue);
     }
     savedOperator = e.target.dataset.operator;
     enteringNumber = false;
@@ -91,7 +96,7 @@ const equalsPressed = e => {
     while (isOverflowing(savedValue, MAX_INT_LENGTH)) {
         savedValue = roundByOne(savedValue);
     }
-    display.textContent = savedValue;
+    renderDisplay(savedValue);
     savedOperator = null;
     enteringNumber = false;
     isDecimal = false;
@@ -100,15 +105,18 @@ const equalsPressed = e => {
 const backPressed = e => {
     if (!enteringNumber) return;
     if (display.textContent.length === 1) {
-        display.textContent = '0';
+        renderDisplay('0');
         enteringNumber = false;
+        isDecimal = false;
     } else {
-        display.textContent = display.textContent.slice(0,-1)
+        let dContent = display.textContent;
+        if (dContent[dContent.length-1] === '.') isDecimal = false;
+        renderDisplay(dContent.slice(0,-1));
     }
 };
 
 const clear = e => {
-    display.textContent = '0';
+    renderDisplay('0');
     savedValue = null;
     savedOperator = null;
     enteringNumber = false;
