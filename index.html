@@ -27,14 +27,19 @@
         <button class="button number-button grid-8" data-value="8">8</button>
         <button class="button number-button grid-9" data-value="9">9</button>
         <button class="button number-button grid-0" data-value="0">0</button>
-        <button class="button number-button grid-dec" data-value=".">.</button>
-        <button class="button grid-eql" id="equal-button">=</button>
+        <button class="button decimal-button grid-dec" data-value=".">.</button>
+        <button class="button grid-eql" id="equal-button" data-operator="=">=</button>
         <button class="button operator-button grid-add" data-operator="+">+</button>
         <button class="button operator-button grid-sub" data-operator="-">-</button>
         <button class="button operator-button grid-mul" data-operator="*">x</button>
         <button class="button operator-button grid-div" data-operator="/">&divide;</button>
     </div>
 
+    <!-- <script>
+        document.addEventListener('keydown', (e) => {
+            console.log(`Key: ${e.key} Code: ${e.code}`);
+        });
+    </script> -->
     <script src="script.js"></script>
 </body>
 </html>
