@@ -3,14 +3,16 @@
 // Pending operation state
 
 const MAX_INT_LENGTH = 12;
+const VALID_OPERATORS = ['+','-','*','/','='];
+const VALID_DIGITS = ['0','1','2','3','4','5','6','7','9','0'];
 
 let workingValue = '';
 let savedValue = '';
 let savedOperator = '';
 
 const display = document.getElementById('display');
-const numButtons = document.querySelectorAll('.number-button');
-const operatorButtons = document.querySelectorAll('.operator-button');
+const numButtons = Array.from(document.querySelectorAll('.number-button'));
+const operatorButtons = Array.from(document.querySelectorAll('.operator-button'));
 const decimalButton = document.querySelector('.decimal-button');
 const backButton = document.getElementById('back-button');
 const clearButton = document.getElementById('clear-button');
@@ -87,9 +89,7 @@ const getNumberFromEvent = e => {
     if (e.type === 'click') {
         return e.target.dataset.value;
     } else if (e.type === 'keydown') {
-        const k = e.key;
-        const validDigit = [0,1,2,3,4,5,6,7,8,9].find(i => k===i);
-        if(validDigit !== undefined) return k;
+        return e.key;
     }
 };
 
@@ -97,16 +97,15 @@ const getOperatorFromEvent = e => {
     if (e.type === 'click') {
         return e.target.dataset.operator;
     } else if (e.type === 'keydown') {
-        const k = e.key;
-        const validOperator = ['*', '/', '-', '+', '='].find(o => k===o);
-        if(validOperator !== undefined) return k;
+        return e.key;
     }
 };
 
-const setOperator = (operator, btn) => {
+const setOperator = (operator) => {
     clearOperator();
     savedOperator = operator;
-    btn.classList.add('current-operator');
+    const button = operatorButtons.find(o=>o.dataset.operator === operator);
+    button.classList.add('current-operator');
 };
 
 const clearOperator = () => {
@@ -134,24 +133,24 @@ const operatorPressed = e => {
     if(!savedValue && operator !== '=') {
         savedValue = workingValue;
         workingValue = '';
-        setOperator(operator, e.target);
+        setOperator(operator);
         renderDisplay(savedValue);
     //Data saved, no previous operation (hit equals previously)
     } else if (savedValue && !savedOperator){
         //but not hitting equals right after
-        if (operator !== '=') setOperator(operator, e.target);
+        if (operator !== '=') setOperator(operator);
     //Data saved, previous operation
     } else if (savedValue && savedOperator) {
         //Just changing operators
         if(!workingValue) {
-            setOperator(operator, e.target);
+            setOperator(operator);
             return;
         }
         const result = operate(savedValue, workingValue, savedOperator);
         savedValue = result;
         workingValue = '';
         if(operator !== '=') {
-            setOperator(operator, e.target)
+            setOperator(operator)
         } else {
             clearOperator();
         }
@@ -159,21 +158,21 @@ const operatorPressed = e => {
     }
 }
 
-const backPressed = e => {
+const backPressed = () => {
     if(workingValue.length) {
         workingValue = workingValue.slice(0,-1);
         renderDisplay(workingValue);
     }
 };
 
-const decimalPressed = e => {
+const decimalPressed = () => {
     if(workingValue.indexOf('.') === -1){
         workingValue += '.';
         renderDisplay(workingValue);
     }
 };
 
-const clear = e => {
+const clear = () => {
     clearDisplay();
     workingValue = '';
     savedValue = '';
@@ -193,3 +192,18 @@ equalButton.addEventListener('click', operatorPressed);
 backButton.addEventListener('click', backPressed);
 decimalButton.addEventListener('click', decimalPressed);
 clearButton.addEventListener('click', clear);
+
+document.addEventListener('keydown', e => {
+    const key = e.key;
+    if(VALID_DIGITS.findIndex(d=>d===key) !== -1) {
+        numberPressed(e);
+    } else if (VALID_OPERATORS.findIndex(o=>o===key) !== -1) {
+        operatorPressed(e);
+    } else if (key === 'Backspace') {
+        backPressed();
+    } else if (key === '.') {
+        decimalPressed();
+    } else if (key === 'Enter') {
+        operatorPressed({type:'keydown', key:'='});
+    }
+});
