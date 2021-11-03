@@ -1,6 +1,6 @@
 const MAX_INT_LENGTH = 12;
 const VALID_OPERATORS = ['+','-','*','/','='];
-const VALID_DIGITS = ['0','1','2','3','4','5','6','7','9','0'];
+const VALID_DIGITS = ['0','1','2','3','4','5','6','7','8','9','0'];
 
 const display = document.getElementById('display');
 const numButtons = Array.from(document.querySelectorAll('.number-button'));
@@ -79,8 +79,6 @@ const sub = (a,b,af,bf) => {
 }
 
 const mul = (a,b,af,bf) => { 
-    if(!af && !bf) return Number(a) * Number(b);
-
     return (Number(a) * Number(b)) / (10**(af+bf));
 }
 
@@ -212,11 +210,6 @@ const backPressed = () => {
 
 const decimalPressed = () => {
     if(workingValue.indexOf('.') === -1){
-        // if(workingValue === '') {
-        //     workingValue = '0.';
-        // } else {
-        //     workingValue += '.';
-        // }
         workingValue += '.';
         renderDisplay(workingValue);
     }
