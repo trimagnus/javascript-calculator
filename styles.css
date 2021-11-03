@@ -38,6 +38,11 @@
     background-color: #eee;
 }
 
+button.current-operator {
+    border: none;
+    color: gold;
+}
+
 .grid-dis {
     grid-area: grid-dis;
     display: flex;

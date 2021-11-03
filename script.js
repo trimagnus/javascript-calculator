@@ -35,9 +35,7 @@ const operate = (a, b, operator) => {
             num = div(a,b);
             break;
     }
-    //Check For Overflow and Round
     return num.toString();
-    //////////////////////////////
 };
 
 // FIX FLOATING POINT MATH! //
@@ -53,18 +51,14 @@ const div = (a,b) => {
 /////////////////////////////
 
 // Change an int string into scientific notiation
-// 6803335609 -- 6.803356e9
 const intToScientific = (text) => {
-    //Determine how much larger the int value is than the display max
     let overage = text.length - MAX_INT_LENGTH;
     let shortString;
     // Attempt to round the digit to a reasonable value
     do  {
         shortString = Number(text).toExponential(overage++);
     } while (shortString.length > MAX_INT_LENGTH)
-    console.log(`String: ${text} Shortstring: ${shortString}`)
     return shortString;
-    
 };
 
 const clearDisplay = () => {
@@ -109,6 +103,19 @@ const getOperatorFromEvent = e => {
     }
 };
 
+const setOperator = (operator, btn) => {
+    clearOperator();
+    savedOperator = operator;
+    btn.classList.add('current-operator');
+};
+
+const clearOperator = () => {
+    savedOperator = '';
+    operatorButtons.forEach(button => {
+        button.classList.remove('current-operator');
+    });
+};
+
 // EVENTS //
 const numberPressed = e => {
     let number = getNumberFromEvent(e);
@@ -127,21 +134,26 @@ const operatorPressed = e => {
     if(!savedValue && operator !== '=') {
         savedValue = workingValue;
         workingValue = '';
-        savedOperator = operator;
+        setOperator(operator, e.target);
         renderDisplay(savedValue);
     //Data saved, no previous operation (hit equals previously)
     } else if (savedValue && !savedOperator){
         //but not hitting equals right after
-        if (operator !== '=') savedOperator = operator;
+        if (operator !== '=') setOperator(operator, e.target);
     //Data saved, previous operation
     } else if (savedValue && savedOperator) {
+        //Just changing operators
+        if(!workingValue) {
+            setOperator(operator, e.target);
+            return;
+        }
         const result = operate(savedValue, workingValue, savedOperator);
         savedValue = result;
         workingValue = '';
         if(operator !== '=') {
-            savedOperator = operator;
+            setOperator(operator, e.target)
         } else {
-            savedOperator = '';
+            clearOperator();
         }
         renderDisplay(savedValue);
     }
@@ -165,7 +177,7 @@ const clear = e => {
     clearDisplay();
     workingValue = '';
     savedValue = '';
-    savedOperator = '';
+    clearOperator();
 };
 
 // EVENT HOOKS //
@@ -181,9 +193,3 @@ equalButton.addEventListener('click', operatorPressed);
 backButton.addEventListener('click', backPressed);
 decimalButton.addEventListener('click', decimalPressed);
 clearButton.addEventListener('click', clear);
-
-// document.addEventListener('click', _ => {
-//     console.log(`workingValue: ` + workingValue);
-//     console.log('savedValue: ' + savedValue);
-//     console.log('savedOperator: ' + savedOperator);
-// });
