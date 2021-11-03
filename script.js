@@ -1,14 +1,6 @@
-// Initial state
-// Accumulating state
-// Pending operation state
-
 const MAX_INT_LENGTH = 12;
 const VALID_OPERATORS = ['+','-','*','/','='];
 const VALID_DIGITS = ['0','1','2','3','4','5','6','7','9','0'];
-
-let workingValue = '';
-let savedValue = '';
-let savedOperator = '';
 
 const display = document.getElementById('display');
 const numButtons = Array.from(document.querySelectorAll('.number-button'));
@@ -18,39 +10,89 @@ const backButton = document.getElementById('back-button');
 const clearButton = document.getElementById('clear-button');
 const equalButton = document.getElementById('equal-button');
 
+let workingValue = '';
+let savedValue = '';
+let savedOperator = '';
+
+//////////////////////
 // HELPER FUNCTIONS //
-const operate = (a, b, operator) => {
-    let num = null;
-    a = Number(a);
-    b = Number(b);
-    switch(operator) {
-        case '+':
-            num = add(a,b);
-            break;
-        case '-':
-            num = sub(a,b);
-            break;
-        case '*':
-            num = mul(a,b);
-            break;
-        case '/':
-            num = div(a,b);
-            break;
+//////////////////////
+
+const operate = (leftNumber, rightNumber, operator) => {
+    let result;
+
+    let leftDecimalIndex = leftNumber.indexOf('.');
+    let leftFactor = 0;
+    let rightDecimalIndex = rightNumber.indexOf('.');
+    let rightFactor = 0;
+
+    if (leftDecimalIndex !== -1) {
+        leftFactor = leftNumber.length - leftDecimalIndex - 1;
+        leftNumber = leftNumber.replace('.', '');
     }
-    return num.toString();
+    if (rightDecimalIndex !== -1) {
+        rightFactor = rightNumber.length - rightDecimalIndex - 1;
+        rightNumber = rightNumber.replace('.', '');
+    }
+
+    if(operator === '+') {
+        result = add(leftNumber, rightNumber, leftFactor, rightFactor);
+    } else if (operator === '-') {
+        result = sub(leftNumber, rightNumber, leftFactor, rightFactor);
+    } else if (operator === '*') {
+        result = mul(leftNumber, rightNumber, leftFactor, rightFactor);
+    } else if (operator === '/') {
+        result = div(leftNumber, rightNumber, leftFactor, rightFactor);
+    }
+
+    return result.toString();
 };
 
-// FIX FLOATING POINT MATH! //
-const add = (a,b) => (a+b);
-const sub = (a,b) => (a-b);
-const mul = (a,b) => (a*b);
-const div = (a,b) => {
-    if (b === 0) {
+const add = (a,b,af,bf) => {
+    if(!af && !bf) return Number(a) + Number(b);
+
+    let largestFactor = Math.max(af, bf);
+    while(af < largestFactor) {
+        a+='0';
+        af++;
+    }
+    while(bf < largestFactor) {
+        b+='0';
+        bf++;
+    }
+    return (Number(a) + Number(b)) / (10**largestFactor);
+}
+
+const sub = (a,b,af,bf) => {
+    if(!af && !bf) return Number(a) - Number(b);
+
+    let largestFactor = Math.max(af, bf);
+    while(af < largestFactor) {
+        a+='0';
+        af++;
+    }
+    while(bf < largestFactor) {
+        b+='0';
+        bf++;
+    }
+    return (Number(a) - Number(b)) / (10**largestFactor);
+}
+
+const mul = (a,b,af,bf) => { 
+    if(!af && !bf) return Number(a) * Number(b);
+
+    return (Number(a) * Number(b)) / (10**(af+bf));
+}
+
+const div = (a,b,af,bf) => {
+    if (b === '0') {
         return "No div zero!";
     }
-    return (a/b);
+    if(!af && !bf) return Number(a) / Number(b);
+
+    let exponentDifference = Math.max(af,bf) - Math.min(af,bf);
+    return (Number(a) / Number(b)) * (10**exponentDifference);
 }
-/////////////////////////////
 
 // Change an int string into scientific notiation
 const intToScientific = (text) => {
@@ -79,7 +121,7 @@ const renderDisplay = (text) => {
 };
 
 const accumulateNumber = num => {
-    if(workingValue === '' && num === '0') return;
+    if(workingValue === '0' && num === '0') return;
     if(workingValue.length < MAX_INT_LENGTH){
         workingValue = workingValue + num;
     }
@@ -115,7 +157,10 @@ const clearOperator = () => {
     });
 };
 
+////////////
 // EVENTS //
+////////////
+
 const numberPressed = e => {
     let number = getNumberFromEvent(e);
     accumulateNumber(number);
@@ -167,6 +212,11 @@ const backPressed = () => {
 
 const decimalPressed = () => {
     if(workingValue.indexOf('.') === -1){
+        // if(workingValue === '') {
+        //     workingValue = '0.';
+        // } else {
+        //     workingValue += '.';
+        // }
         workingValue += '.';
         renderDisplay(workingValue);
     }
@@ -179,7 +229,25 @@ const clear = () => {
     clearOperator();
 };
 
+const keyboardPressed = e => {
+    const key = e.key;
+    if(VALID_DIGITS.findIndex(d=>d===key) !== -1) {
+        numberPressed(e);
+    } else if (VALID_OPERATORS.findIndex(o=>o===key) !== -1) {
+        operatorPressed(e);
+    } else if (key === 'Backspace') {
+        backPressed();
+    } else if (key === '.') {
+        decimalPressed();
+    } else if (key === 'Enter') {
+        operatorPressed({type:'keydown', key:'='});
+    }
+};
+
+/////////////////
 // EVENT HOOKS //
+/////////////////
+
 numButtons.forEach( b => {
     b.addEventListener('click', numberPressed);
 });
@@ -193,17 +261,4 @@ backButton.addEventListener('click', backPressed);
 decimalButton.addEventListener('click', decimalPressed);
 clearButton.addEventListener('click', clear);
 
-document.addEventListener('keydown', e => {
-    const key = e.key;
-    if(VALID_DIGITS.findIndex(d=>d===key) !== -1) {
-        numberPressed(e);
-    } else if (VALID_OPERATORS.findIndex(o=>o===key) !== -1) {
-        operatorPressed(e);
-    } else if (key === 'Backspace') {
-        backPressed();
-    } else if (key === '.') {
-        decimalPressed();
-    } else if (key === 'Enter') {
-        operatorPressed({type:'keydown', key:'='});
-    }
-});
+document.addEventListener('keydown', keyboardPressed);
