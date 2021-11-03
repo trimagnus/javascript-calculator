@@ -9,6 +9,7 @@ const decimalButton = document.querySelector('.decimal-button');
 const backButton = document.getElementById('back-button');
 const clearButton = document.getElementById('clear-button');
 const equalButton = document.getElementById('equal-button');
+const plusMinusButton = document.getElementById('plusminus-button');
 
 let workingValue = '';
 let savedValue = '';
@@ -222,6 +223,20 @@ const clear = () => {
     clearOperator();
 };
 
+const plusMinusPressed = () => {
+    if(workingValue.indexOf('-') === -1) {
+        if(workingValue.length < MAX_INT_LENGTH) {
+            workingValue = '-' + workingValue;
+        }
+        if(workingValue.length > 1){
+            renderDisplay(workingValue);
+        }
+    } else {
+        workingValue = workingValue.slice(1);
+        renderDisplay(workingValue);
+    }
+};
+
 const keyboardPressed = e => {
     const key = e.key;
     if(VALID_DIGITS.findIndex(d=>d===key) !== -1) {
@@ -253,5 +268,6 @@ equalButton.addEventListener('click', operatorPressed);
 backButton.addEventListener('click', backPressed);
 decimalButton.addEventListener('click', decimalPressed);
 clearButton.addEventListener('click', clear);
+plusMinusButton.addEventListener('click', plusMinusPressed);
 
 document.addEventListener('keydown', keyboardPressed);

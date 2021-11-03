@@ -19,7 +19,7 @@
     grid-template-areas:
         "grid-dis grid-dis grid-dis grid-dis"
         "grid-dis grid-dis grid-dis grid-dis"
-        "grid-clr .        .        grid-back"
+        "grid-clr .        grid-plusminus        grid-back"
         "grid-7   grid-8   grid-9   grid-div"
         "grid-4   grid-5   grid-6   grid-mul"
         "grid-1   grid-2   grid-3   grid-sub"
@@ -62,6 +62,10 @@ button.current-operator {
     grid-area: grid-clr;
     background-color: firebrick;
     color: white;
+}
+
+.grid-plusminus {
+    grid-area: grid-plusminus;
 }
 
 .grid-bck {
@@ -119,9 +123,10 @@ button.current-operator {
     border-color: rgb(42, 65, 65);
     border-width: 1px;
 }
-.operator-button {
+.operator-button, .grid-plusminus {
     background-color: grey;
     color: white;
+    font-weight: lighter;
 }
 .grid-dec {
     grid-area: grid-dec;
